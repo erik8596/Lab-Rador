@@ -1,0 +1,6 @@
+# TODO: Modern Python project configuration
+# [build-system]
+# [project]
+# [tool.pytest.ini_options]
+# [tool.mypy]
+# [tool.black]
