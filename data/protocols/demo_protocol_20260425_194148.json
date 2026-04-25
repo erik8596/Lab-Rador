@@ -1,0 +1,55 @@
+{
+  "title": "Demo Protocol",
+  "objective": "Demo implementation of: Prepare a PCR reaction for amplifying a 500bp DNA fragment",
+  "duration_minutes": 15.0,
+  "difficulty_level": "beginner",
+  "equipment_required": [
+    {
+      "name": "Basic lab equipment",
+      "type": "other",
+      "quantity": 1,
+      "notes": null
+    }
+  ],
+  "materials_required": [
+    {
+      "name": "Required materials",
+      "type": "other",
+      "amount": "as needed",
+      "concentration": null,
+      "storage_conditions": null,
+      "notes": null
+    }
+  ],
+  "safety_notes": [
+    {
+      "level": "medium",
+      "description": "Follow standard laboratory safety practices",
+      "ppe_required": [
+        "Lab coat",
+        "Gloves",
+        "Safety goggles"
+      ],
+      "hazards": null
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "description": "Perform the described procedure: Prepare a PCR reaction for amplifying a 500bp DNA fragment",
+      "duration_minutes": 15.0,
+      "notes": "Follow standard laboratory safety practices",
+      "equipment": [
+        "Basic lab equipment"
+      ],
+      "materials": [
+        "Required materials"
+      ],
+      "critical_parameters": null
+    }
+  ],
+  "created_at": "2026-04-25T19:41:48.354254",
+  "version": "1.0",
+  "author": "Lab-Rador Demo Mode",
+  "references": null
+}

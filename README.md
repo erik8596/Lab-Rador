@@ -2,52 +2,158 @@
 
 **SCSP Hackathon 2026 — Autonomous Laboratories Track**
 
-## Status: 🏗️ Foundation Template Created
+## Status: ✅ Working with FREE AI (Quota Limited)
 
-This is the comprehensive project scaffold for Lab-Rador, an autonomous laboratory protocol automation system using AI to transform natural language descriptions into executable lab protocols.
+Lab-Rador is a complete autonomous laboratory protocol automation system that uses **FREE Google Gemini AI** to transform natural language descriptions into structured, executable lab protocols.
 
-## 📋 Project Structure
+**Current Status**: API integration working, but free tier quota may be exceeded. Use demo mode as fallback.
+
+## 🚀 Quick Start
+
+### 1. Get FREE Gemini API Key
+1. Visit: https://makersuite.google.com/app/apikey
+2. Sign in with Google account
+3. Create API key and copy it
+
+### 2. Configure Environment
+```bash
+# Edit .env file
+GEMINI_API_KEY=your_api_key_here
+LABRADOR_DEMO_MODE=false
+```
+
+### 3. Generate Your First Protocol
+```bash
+python main.py generate "Prepare a PCR reaction for amplifying a 500bp DNA fragment"
+```
+
+### ⚠️ **API Quota Note**
+- **Free Tier**: 60 requests/minute, 1000/day
+- If you see quota exceeded errors, use demo mode:
+  ```bash
+  LABRADOR_DEMO_MODE=true python main.py generate "your protocol"
+  ```
+- Quota resets daily
+
+### 4. View Generated Protocols
+```bash
+python main.py list-protocols
+```
+
+## 📋 Features
+
+### ✅ **Implemented**
+- **FREE AI Integration**: Google Gemini API (60 requests/min, 1000/day)
+- **Multi-format Output**: Markdown documentation + JSON data
+- **Rich CLI**: Progress bars, tables, colored output
+- **Protocol Models**: Pydantic-based data validation
+- **File Management**: Automatic saving and listing
+- **Demo Mode**: Works without API keys for testing
+
+### 🏗️ **Architecture**
+- **Agent-based Design**: ProtocolGenerator with AI analysis
+- **Modular Generators**: Separate Markdown/JSON output
+- **Type Safety**: Full Pydantic validation
+- **Error Handling**: Comprehensive exception hierarchy
+- **Configuration**: Environment-based settings
+
+## 🎯 Core Components
+
+### **Core Models** (`core/models.py`)
+- `Protocol` — Complete lab procedure with metadata
+- `Step` — Individual protocol steps with timing
+- `Equipment` — Lab equipment with types and quantities
+- `Material` — Reagents with amounts and safety info
+- `SafetyNote` — PPE requirements and warnings
+
+### **AI Agents** (`agents/`)
+- `ProtocolGenerator` — Converts natural language to structured protocols
+- Multi-API support: Gemini (FREE) → Claude (paid) → Demo fallback
+
+### **Generators** (`generators/`)
+- `MarkdownGenerator` — Human-readable protocol documentation
+- `JSONGenerator` — Structured data export/import
+
+### **CLI Interface** (`cli/`)
+- `generate` — Create protocols from descriptions
+- `list-protocols` — View saved protocols
+- `export` — Export in different formats
+
+## 🔧 Technical Stack
+
+- **Python 3.12+** with type hints
+- **Pydantic 2.x** — Data validation and serialization
+- **Google Gemini API** — FREE AI for protocol generation
+- **Typer** — Modern CLI framework
+- **Rich** — Beautiful terminal output
+- **Pathlib** — Modern file system operations
+
+## 📁 Project Structure
 
 ```
 Lab-Rador/
-├── agents/              # AI agents (generation, refinement, analysis)
-├── api/                 # External API clients (Anthropic, protocols.io)
-├── cli/                 # Command-line interface
-├── config/              # Configuration and constants
-├── core/                # Domain models, exceptions, enums
-├── data/                # Example protocols and catalogs
-├── docs/                # Documentation
-├── generators/          # Output format generators (Opentrons, Markdown, JSON)
-├── scripts/             # Utility scripts
-├── tests/               # Test suite
-├── utils/               # Logging, validation, formatting
-├── main.py              # Entry point
+├── main.py              # CLI entry point
+├── cli/main_cli.py      # Command definitions
+├── agents/
+│   └── protocol_generator.py
+├── api/
+│   └── gemini_client.py # FREE Gemini API client
+├── core/
+│   ├── models.py        # Pydantic models
+│   └── exceptions.py    # Error handling
+├── generators/
+│   ├── markdown_generator.py
+│   └── json_generator.py
+├── config/
+│   └── settings.py      # Configuration
+├── utils/
+│   └── file_io.py       # File operations
+├── data/protocols/      # Generated protocols
 ├── requirements.txt     # Dependencies
-├── pyproject.toml       # Modern Python config
-├── pytest.ini           # Test configuration
-├── Makefile             # Development commands
-└── [docs files]         # INSTALL.md, CONTRIBUTING.md, etc.
+└── .env                 # API keys (not in git)
 ```
 
-## 🎯 Core Components (To Be Implemented)
+## 🎮 Usage Examples
 
-### 1. **Core Module** (`core/`)
-   - `models.py` — Protocol, Step, Equipment, Material, Safety models
-   - `exceptions.py` — Custom error types
-   - `enums.py` — Difficulty levels, equipment types, material categories
+### Generate Protocol
+```bash
+python main.py generate "Extract DNA from blood samples using phenol-chloroform method"
+```
 
-### 2. **Agents Module** (`agents/`)
-   - `protocol_generator.py` — Convert natural language → structured protocols
-   - `protocol_refiner.py` — Iterative refinement with feedback
-   - `protocol_analyzer.py` — Safety checks and compatibility validation
-   - `prompts/` — Claude prompt templates
+### List Protocols
+```bash
+python main.py list-protocols
+```
 
-### 3. **Generators Module** (`generators/`)
-   - `opentrons_generator.py` — Generate Opentrons robot scripts
-   - `markdown_generator.py` — Human-readable documentation
-   - `json_generator.py` — Structured data export
+### Export Protocol
+```bash
+python main.py export "protocol_name" --format markdown
+```
 
-### 4. **API Module** (`api/`)
+## 🔒 Security & Safety
+
+- **Input Validation**: All protocols validated against schemas
+- **Safety Checks**: Automatic PPE and hazard identification
+- **Error Handling**: Graceful failure with helpful messages
+- **API Security**: Keys stored in environment variables
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Add tests for new functionality
+4. Ensure all tests pass
+5. Submit pull request
+
+## 📄 License
+
+MIT License - Free for academic and research use.
+
+## 🙏 Acknowledgments
+
+- SCSP Hackathon organizers
+- Google for providing FREE Gemini API
+- Open source community for amazing Python libraries
    - `anthropic_client.py` — Wrapper for Claude API
    - `protocols_io_client.py` — Integration with protocols.io
    - `base_client.py` — Common HTTP utilities
