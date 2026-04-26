@@ -52,11 +52,11 @@ def generate(
             console=console,
             disable=quiet,
         ) as progress:
-            task = progress.add_task("🤖 Analyzing procedure with AI agent...", total=None)
+            task = progress.add_task("Analyzing procedure with AI agent...", total=None)
 
             protocol = generator.generate_protocol(description)
 
-            progress.update(task, description="✅ Protocol generated successfully!")
+            progress.update(task, description="Protocol generated successfully!")
 
         # Generate outputs
         if not quiet:
@@ -71,7 +71,7 @@ def generate(
                 markdown = markdown_gen.generate_protocol_markdown(protocol)
                 json_data = json_gen.generate_protocol_json(protocol)
 
-                progress.update(task, description="✅ Documentation generated!")
+                progress.update(task, description="Documentation generated!")
 
         # Save files
         if not quiet:
@@ -85,11 +85,11 @@ def generate(
 
                 saved_files = save_protocol_files(protocol, output_dir, name)
 
-                progress.update(task, description="✅ Files saved!")
+                progress.update(task, description="Files saved!")
 
         # Display results
         if not quiet:
-            console.print("\n[green]🎉 Protocol generated successfully![/green]")
+            console.print("\n[green]Protocol generated successfully![/green]")
             console.print(f"[blue]Title:[/blue] {protocol.title}")
             console.print(f"[blue]Duration:[/blue] {protocol.duration_minutes} minutes")
             console.print(f"[blue]Steps:[/blue] {len(protocol.steps)}")
@@ -100,7 +100,7 @@ def generate(
                 console.print(f"  • {file_path}")
 
     except Exception as e:
-        console.print(f"[red]❌ Error generating protocol: {e}[/red]")
+        console.print(f"[red]Error generating protocol: {e}[/red]")
         raise typer.Exit(1)
 
 
@@ -140,7 +140,7 @@ def list_protocols(
         console.print(table)
 
     except Exception as e:
-        console.print(f"[red]❌ Error listing protocols: {e}[/red]")
+        console.print(f"[red]Error listing protocols: {e}[/red]")
         raise typer.Exit(1)
 
 
@@ -184,10 +184,10 @@ def export(
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(content)
 
-        console.print(f"[green]✅ Protocol exported to: {output_path}[/green]")
+        console.print(f"[green]Protocol exported to: {output_path}[/green]")
 
     except Exception as e:
-        console.print(f"[red]❌ Error exporting protocol: {e}[/red]")
+        console.print(f"[red]Error exporting protocol: {e}[/red]")
         raise typer.Exit(1)
 
 

@@ -2,13 +2,13 @@
 
 **SCSP Hackathon 2026 — Autonomous Laboratories Track**
 
-## Status: ✅ Working with FREE AI (Quota Limited)
+## Status: Working with FREE AI (Quota Limited)
 
-Lab-Rador is a complete autonomous laboratory protocol automation system that uses **FREE Google Gemini AI** to transform natural language descriptions into structured, executable lab protocols.
+Lab-Rador is a complete autonomous laboratory protocol automation system that uses FREE Google Gemini AI to transform natural language descriptions into structured, executable lab protocols.
 
-**Current Status**: API integration working, but free tier quota may be exceeded. Use demo mode as fallback.
+Current Status: API integration working, but free tier quota may be exceeded. Use demo mode as fallback.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Get FREE Gemini API Key
 1. Visit: https://makersuite.google.com/app/apikey
@@ -27,8 +27,8 @@ LABRADOR_DEMO_MODE=false
 python main.py generate "Prepare a PCR reaction for amplifying a 500bp DNA fragment"
 ```
 
-### ⚠️ **API Quota Note**
-- **Free Tier**: 60 requests/minute, 1000/day
+### API Quota Note
+- Free Tier: 60 requests/minute, 1000/day
 - If you see quota exceeded errors, use demo mode:
   ```bash
   LABRADOR_DEMO_MODE=true python main.py generate "your protocol"
@@ -40,55 +40,55 @@ python main.py generate "Prepare a PCR reaction for amplifying a 500bp DNA fragm
 python main.py list-protocols
 ```
 
-## 📋 Features
+## Features
 
-### ✅ **Implemented**
-- **FREE AI Integration**: Google Gemini API (60 requests/min, 1000/day)
-- **Multi-format Output**: Markdown documentation + JSON data
-- **Rich CLI**: Progress bars, tables, colored output
-- **Protocol Models**: Pydantic-based data validation
-- **File Management**: Automatic saving and listing
-- **Demo Mode**: Works without API keys for testing
+### Implemented
+- FREE AI Integration: Google Gemini API (60 requests/min, 1000/day)
+- Multi-format Output: Markdown documentation + JSON data
+- Rich CLI: Progress bars, tables, colored output
+- Protocol Models: Pydantic-based data validation
+- File Management: Automatic saving and listing
+- Demo Mode: Works without API keys for testing
 
-### 🏗️ **Architecture**
-- **Agent-based Design**: ProtocolGenerator with AI analysis
-- **Modular Generators**: Separate Markdown/JSON output
-- **Type Safety**: Full Pydantic validation
-- **Error Handling**: Comprehensive exception hierarchy
-- **Configuration**: Environment-based settings
+### Architecture
+- Agent-based Design: ProtocolGenerator with AI analysis
+- Modular Generators: Separate Markdown/JSON output
+- Type Safety: Full Pydantic validation
+- Error Handling: Comprehensive exception hierarchy
+- Configuration: Environment-based settings
 
-## 🎯 Core Components
+## Core Components
 
-### **Core Models** (`core/models.py`)
-- `Protocol` — Complete lab procedure with metadata
-- `Step` — Individual protocol steps with timing
-- `Equipment` — Lab equipment with types and quantities
-- `Material` — Reagents with amounts and safety info
-- `SafetyNote` — PPE requirements and warnings
+### Core Models (core/models.py)
+- Protocol — Complete lab procedure with metadata
+- Step — Individual protocol steps with timing
+- Equipment — Lab equipment with types and quantities
+- Material — Reagents with amounts and safety info
+- SafetyNote — PPE requirements and warnings
 
-### **AI Agents** (`agents/`)
-- `ProtocolGenerator` — Converts natural language to structured protocols
+### AI Agents (agents/)
+- ProtocolGenerator — Converts natural language to structured protocols
 - Multi-API support: Gemini (FREE) → Claude (paid) → Demo fallback
 
-### **Generators** (`generators/`)
-- `MarkdownGenerator` — Human-readable protocol documentation
-- `JSONGenerator` — Structured data export/import
+### Generators (generators/)
+- MarkdownGenerator — Human-readable protocol documentation
+- JSONGenerator — Structured data export/import
 
-### **CLI Interface** (`cli/`)
-- `generate` — Create protocols from descriptions
-- `list-protocols` — View saved protocols
-- `export` — Export in different formats
+### CLI Interface (cli/)
+- generate — Create protocols from descriptions
+- list-protocols — View saved protocols
+- export — Export in different formats
 
-## 🔧 Technical Stack
+## Technical Stack
 
-- **Python 3.12+** with type hints
-- **Pydantic 2.x** — Data validation and serialization
-- **Google Gemini API** — FREE AI for protocol generation
-- **Typer** — Modern CLI framework
-- **Rich** — Beautiful terminal output
-- **Pathlib** — Modern file system operations
+- Python 3.12+ with type hints
+- Pydantic 2.x — Data validation and serialization
+- Google Gemini API — FREE AI for protocol generation
+- Typer — Modern CLI framework
+- Rich — Beautiful terminal output
+- Pathlib — Modern file system operations
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Lab-Rador/
@@ -149,7 +149,7 @@ python main.py export "protocol_name" --format markdown
 
 MIT License - Free for academic and research use.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - SCSP Hackathon organizers
 - Google for providing FREE Gemini API
@@ -168,25 +168,25 @@ MIT License - Free for academic and research use.
    - `formatters.py` — Output formatting
    - `file_io.py` — File operations
 
-## 🚀 Next Steps
+## Next Steps
 
-1. **Implement Core Models** — Define data structures
-2. **Build API Clients** — Anthropic integration
-3. **Create Agents** — Protocol generation logic
-4. **Add Generators** — Output format support
-5. **Build CLI** — User interface
-6. **Tests & Docs** — Full coverage
+1. Implement Core Models — Define data structures
+2. Build API Clients — Anthropic integration
+3. Create Agents — Protocol generation logic
+4. Add Generators — Output format support
+5. Build CLI — User interface
+6. Tests & Docs — Full coverage
 
-## 📦 Dependencies
+## Dependencies
 
-- **anthropic** — Claude AI API
-- **typer** — CLI framework
-- **pydantic** — Data validation
-- **requests** — HTTP client
-- **rich** — Beautiful terminal output
-- **python-dotenv** — Environment variables
+- anthropic — Claude AI API
+- typer — CLI framework
+- pydantic — Data validation
+- requests — HTTP client
+- rich — Beautiful terminal output
+- python-dotenv — Environment variables
 
-## 🔧 Development
+## Development
 
 ```bash
 # Install dependencies
