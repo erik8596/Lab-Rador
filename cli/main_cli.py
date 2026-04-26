@@ -1,17 +1,18 @@
 """Main CLI entry point."""
 
-import typer
 from pathlib import Path
+
+import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn
+from rich.table import Table
 
 from agents.protocol_generator import ProtocolGenerator
-from generators.markdown_generator import MarkdownGenerator
-from generators.json_generator import JSONGenerator
-from utils.file_io import save_protocol_files
 from config.settings import PROTOCOLS_DIR
+from generators.json_generator import JSONGenerator
+from generators.markdown_generator import MarkdownGenerator
+from utils.file_io import save_protocol_files
 
 app = typer.Typer(
     name="lab-rador",
@@ -24,9 +25,15 @@ console = Console()
 
 @app.command()
 def generate(
-    description: str = typer.Argument(..., help="Natural language description of the lab procedure"),
-    output_dir: str = typer.Option(str(PROTOCOLS_DIR), help="Directory to save generated protocols"),
-    name: str = typer.Option(None, help="Custom name for output files (auto-generated if not provided)"),
+    description: str = typer.Argument(
+        ..., help="Natural language description of the lab procedure"
+    ),
+    output_dir: str = typer.Option(
+        str(PROTOCOLS_DIR), help="Directory to save generated protocols"
+    ),
+    name: str = typer.Option(
+        None, help="Custom name for output files (auto-generated if not provided)"
+    ),
     quiet: bool = typer.Option(False, help="Suppress progress messages"),
 ):
     """
@@ -36,7 +43,9 @@ def generate(
         lab-rador generate "Mix 100 mL of solution A with 50 mL of solution B in a beaker, then heat to 60°C for 15 minutes"
     """
     if not quiet:
-        console.print(Panel("[bold cyan]Lab-Rador Protocol Automator[/bold cyan]", expand=False))
+        console.print(
+            Panel("[bold cyan]Lab-Rador Protocol Automator[/bold cyan]", expand=False)
+        )
         console.print(f"📝 Processing description: {description}\n")
 
     try:
@@ -106,7 +115,9 @@ def generate(
 
 @app.command()
 def list_protocols(
-    directory: str = typer.Option(str(PROTOCOLS_DIR), help="Directory to scan for protocols"),
+    directory: str = typer.Option(
+        str(PROTOCOLS_DIR), help="Directory to scan for protocols"
+    ),
 ):
     """
     List all generated protocols in the specified directory.
@@ -130,11 +141,11 @@ def list_protocols(
 
         for protocol_info in protocols:
             table.add_row(
-                protocol_info['title'],
-                protocol_info['created_at'].strftime("%Y-%m-%d %H:%M"),
-                protocol_info['version'],
-                str(protocol_info['steps_count']),
-                protocol_info['filename']
+                protocol_info["title"],
+                protocol_info["created_at"].strftime("%Y-%m-%d %H:%M"),
+                protocol_info["version"],
+                str(protocol_info["steps_count"]),
+                protocol_info["filename"],
             )
 
         console.print(table)
@@ -148,7 +159,9 @@ def list_protocols(
 def export(
     protocol_id: str = typer.Argument(..., help="Protocol identifier or filename"),
     format: str = typer.Option("markdown", help="Export format (markdown, json)"),
-    output: str = typer.Option(None, help="Output file path (auto-generated if not provided)"),
+    output: str = typer.Option(
+        None, help="Output file path (auto-generated if not provided)"
+    ),
 ):
     """
     Export a protocol in different formats.
@@ -164,11 +177,13 @@ def export(
 
         if format.lower() == "markdown":
             from generators.markdown_generator import MarkdownGenerator
+
             generator = MarkdownGenerator()
             content = generator.generate_protocol_markdown(protocol)
             ext = "md"
         elif format.lower() == "json":
             from generators.json_generator import JSONGenerator
+
             generator = JSONGenerator()
             content = generator.generate_protocol_json(protocol)
             ext = "json"
@@ -181,7 +196,7 @@ def export(
 
         # Save file
         output_path = Path(output)
-        with open(output_path, 'w', encoding='utf-8') as f:
+        with open(output_path, "w", encoding="utf-8") as f:
             f.write(content)
 
         console.print(f"[green]Protocol exported to: {output_path}[/green]")

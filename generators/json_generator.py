@@ -1,8 +1,9 @@
 """JSON export generator."""
 
 import json
-from typing import Dict, Any
 from pathlib import Path
+from typing import Any, Dict
+
 from core.models import Protocol
 
 
@@ -24,8 +25,8 @@ class JSONGenerator:
         protocol_dict = protocol.model_dump()
 
         # Convert datetime to ISO format string
-        if 'created_at' in protocol_dict and protocol_dict['created_at']:
-            protocol_dict['created_at'] = protocol_dict['created_at'].isoformat()
+        if "created_at" in protocol_dict and protocol_dict["created_at"]:
+            protocol_dict["created_at"] = protocol_dict["created_at"].isoformat()
 
         if pretty:
             return json.dumps(protocol_dict, indent=2, ensure_ascii=False)
@@ -33,7 +34,9 @@ class JSONGenerator:
             return json.dumps(protocol_dict, ensure_ascii=False)
 
     @staticmethod
-    def save_protocol_json(protocol: Protocol, file_path: Path, pretty: bool = True) -> None:
+    def save_protocol_json(
+        protocol: Protocol, file_path: Path, pretty: bool = True
+    ) -> None:
         """
         Save protocol as JSON file.
 
@@ -44,7 +47,7 @@ class JSONGenerator:
         """
         json_content = JSONGenerator.generate_protocol_json(protocol, pretty)
 
-        with open(file_path, 'w', encoding='utf-8') as f:
+        with open(file_path, "w", encoding="utf-8") as f:
             f.write(json_content)
 
     @staticmethod
@@ -65,17 +68,18 @@ class JSONGenerator:
         if not file_path.exists():
             raise FileNotFoundError(f"Protocol file not found: {file_path}")
 
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         # Convert ISO datetime string back to datetime if present
-        if 'created_at' in data and isinstance(data['created_at'], str):
+        if "created_at" in data and isinstance(data["created_at"], str):
             from datetime import datetime
+
             try:
-                data['created_at'] = datetime.fromisoformat(data['created_at'])
+                data["created_at"] = datetime.fromisoformat(data["created_at"])
             except ValueError:
                 # If parsing fails, keep as string or set to None
-                data['created_at'] = None
+                data["created_at"] = None
 
         return Protocol(**data)
 
@@ -93,8 +97,12 @@ class JSONGenerator:
         return {
             "id": f"{protocol.title.lower().replace(' ', '_')}_{protocol.version}",
             "title": protocol.title,
-            "created_at": protocol.created_at.isoformat() if protocol.created_at else None,
-            "modified_at": protocol.created_at.isoformat() if protocol.created_at else None,
+            "created_at": protocol.created_at.isoformat()
+            if protocol.created_at
+            else None,
+            "modified_at": protocol.created_at.isoformat()
+            if protocol.created_at
+            else None,
             "version": protocol.version,
             "author": protocol.author,
             "tags": [],  # Could be extended to extract from content
@@ -105,6 +113,6 @@ class JSONGenerator:
                 "equipment_count": len(protocol.equipment_required),
                 "materials_count": len(protocol.materials_required),
                 "safety_notes_count": len(protocol.safety_notes),
-                "difficulty_level": protocol.difficulty_level.value
-            }
+                "difficulty_level": protocol.difficulty_level.value,
+            },
         }

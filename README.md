@@ -19,7 +19,6 @@ Current Status: API integration working, but free tier quota may be exceeded. Us
 ```bash
 # Edit .env file
 GEMINI_API_KEY=your_api_key_here
-LABRADOR_DEMO_MODE=false
 ```
 
 ### 3. Generate Your First Protocol
@@ -29,11 +28,8 @@ python main.py generate "Prepare a PCR reaction for amplifying a 500bp DNA fragm
 
 ### API Quota Note
 - Free Tier: 60 requests/minute, 1000/day
-- If you see quota exceeded errors, use demo mode:
-  ```bash
-  LABRADOR_DEMO_MODE=true python main.py generate "your protocol"
-  ```
-- Quota resets daily
+- System automatically falls back to demo mode if quota is exceeded
+- No manual configuration needed
 
 ### 4. View Generated Protocols
 ```bash
@@ -48,7 +44,7 @@ python main.py list-protocols
 - Rich CLI: Progress bars, tables, colored output
 - Protocol Models: Pydantic-based data validation
 - File Management: Automatic saving and listing
-- Demo Mode: Works without API keys for testing
+- Smart Fallback: Automatic demo mode when API quota exceeded
 
 ### Architecture
 - Agent-based Design: ProtocolGenerator with AI analysis
@@ -68,7 +64,7 @@ python main.py list-protocols
 
 ### AI Agents (agents/)
 - ProtocolGenerator — Converts natural language to structured protocols
-- Multi-API support: Gemini (FREE) → Claude (paid) → Demo fallback
+- Automatic fallback: Gemini (FREE) → Claude (paid) → Demo mode
 
 ### Generators (generators/)
 - MarkdownGenerator — Human-readable protocol documentation

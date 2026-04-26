@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Environment and paths
@@ -30,15 +31,13 @@ CLAUDE_TEMPERATURE = float(os.getenv("CLAUDE_TEMPERATURE", "0.7"))
 PROTOCOLS_IO_BASE_URL = "https://www.protocols.io/api/v3"
 
 # Demo Mode Configuration
-DEMO_MODE = os.getenv("LABRADOR_DEMO_MODE", "false").lower() == "true"
+# Removed: Always try AI first, fallback to demo mode on API errors
+
 
 # Validation
 def validate_config():
     """Validate required configuration."""
-    if DEMO_MODE:
-        # Demo mode doesn't need API keys
-        pass
-    elif GEMINI_API_KEY:
+    if GEMINI_API_KEY:
         # Using free Gemini API
         pass
     elif ANTHROPIC_API_KEY:
@@ -48,13 +47,14 @@ def validate_config():
         raise ValueError(
             "No API key configured. Options:\n"
             "1. Set GEMINI_API_KEY for FREE Google Gemini API\n"
-            "2. Set ANTHROPIC_API_KEY for paid Anthropic Claude API\n"
-            "3. Set LABRADOR_DEMO_MODE=true for demo mode (no API needed)"
+            "2. Set ANTHROPIC_API_KEY for Claude API (paid)\n"
+            "System will automatically fallback to demo mode if API quota is exceeded."
         )
 
     # Create necessary directories
     PROTOCOLS_DIR.mkdir(exist_ok=True, parents=True)
     LOGS_DIR.mkdir(exist_ok=True, parents=True)
+
 
 # Initialize validation
 validate_config()

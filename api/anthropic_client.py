@@ -1,9 +1,16 @@
 """Anthropic API client wrapper."""
 
 import json
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import anthropic
-from config.settings import ANTHROPIC_API_KEY, CLAUDE_MODEL, CLAUDE_MAX_TOKENS, CLAUDE_TEMPERATURE
+
+from config.settings import (
+    ANTHROPIC_API_KEY,
+    CLAUDE_MAX_TOKENS,
+    CLAUDE_MODEL,
+    CLAUDE_TEMPERATURE,
+)
 from core.exceptions import AnthropicAPIError
 
 
@@ -24,7 +31,7 @@ class AnthropicClient:
         prompt: str,
         system_prompt: Optional[str] = None,
         temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None
+        max_tokens: Optional[int] = None,
     ) -> str:
         """
         Generate a response from Claude.
@@ -51,7 +58,7 @@ class AnthropicClient:
                 max_tokens=max_tokens or self.max_tokens,
                 temperature=temperature or self.temperature,
                 system=system_prompt,
-                messages=messages
+                messages=messages,
             )
 
             return response.content[0].text
@@ -65,7 +72,7 @@ class AnthropicClient:
         self,
         prompt: str,
         system_prompt: Optional[str] = None,
-        response_format: Optional[Dict[str, Any]] = None
+        response_format: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Generate a structured JSON response from Claude.
@@ -96,8 +103,8 @@ class AnthropicClient:
 
         try:
             # Try to extract JSON from response
-            json_start = response_text.find('{')
-            json_end = response_text.rfind('}') + 1
+            json_start = response_text.find("{")
+            json_end = response_text.rfind("}") + 1
 
             if json_start >= 0 and json_end > json_start:
                 json_str = response_text[json_start:json_end]

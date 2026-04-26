@@ -1,9 +1,16 @@
 """Google Gemini API client wrapper."""
 
 import json
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import google.genai as genai
-from config.settings import GEMINI_API_KEY, GEMINI_MODEL, GEMINI_MAX_TOKENS, GEMINI_TEMPERATURE
+
+from config.settings import (
+    GEMINI_API_KEY,
+    GEMINI_MAX_TOKENS,
+    GEMINI_MODEL,
+    GEMINI_TEMPERATURE,
+)
 from core.exceptions import GeminiAPIError
 
 
@@ -19,7 +26,9 @@ class GeminiClient:
         self.max_tokens = GEMINI_MAX_TOKENS
         self.temperature = GEMINI_TEMPERATURE
 
-    def generate_response(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+    def generate_response(
+        self, prompt: str, system_prompt: Optional[str] = None
+    ) -> str:
         """
         Generate a response from Gemini.
 
@@ -47,9 +56,7 @@ class GeminiClient:
 
             # Generate response
             response = self.client.models.generate_content(
-                model=self.model,
-                contents=full_prompt,
-                config=config
+                model=self.model, contents=full_prompt, config=config
             )
 
             return response.text
@@ -57,7 +64,9 @@ class GeminiClient:
         except Exception as e:
             raise GeminiAPIError(f"Gemini API error: {e}")
 
-    def generate_structured_response(self, prompt: str, system_prompt: Optional[str] = None) -> Dict[str, Any]:
+    def generate_structured_response(
+        self, prompt: str, system_prompt: Optional[str] = None
+    ) -> Dict[str, Any]:
         """
         Generate a structured JSON response from Gemini.
 
@@ -90,9 +99,7 @@ IMPORTANT: Your response must be valid JSON only, with no additional text or for
 
             # Generate response
             response = self.client.models.generate_content(
-                model=self.model,
-                contents=json_prompt,
-                config=config
+                model=self.model, contents=json_prompt, config=config
             )
 
             response_text = response.text.strip()
@@ -101,7 +108,9 @@ IMPORTANT: Your response must be valid JSON only, with no additional text or for
             try:
                 return json.loads(response_text)
             except json.JSONDecodeError as e:
-                raise GeminiAPIError(f"Invalid JSON response from Gemini: {response_text[:200]}... Error: {e}")
+                raise GeminiAPIError(
+                    f"Invalid JSON response from Gemini: {response_text[:200]}... Error: {e}"
+                )
 
         except Exception as e:
             if isinstance(e, GeminiAPIError):

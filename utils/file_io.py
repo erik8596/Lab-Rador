@@ -1,18 +1,17 @@
 """File I/O operations."""
 
 import json
-from pathlib import Path
-from typing import List, Dict, Any
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
+
 from core.models import Protocol
-from generators.markdown_generator import MarkdownGenerator
 from generators.json_generator import JSONGenerator
+from generators.markdown_generator import MarkdownGenerator
 
 
 def save_protocol_files(
-    protocol: Protocol,
-    output_dir: str,
-    custom_name: str = None
+    protocol: Protocol, output_dir: str, custom_name: str = None
 ) -> List[str]:
     """
     Save protocol in multiple formats.
@@ -33,8 +32,8 @@ def save_protocol_files(
         base_name = custom_name
     else:
         # Create a safe filename from protocol title
-        base_name = protocol.title.lower().replace(' ', '_').replace('-', '_')
-        base_name = ''.join(c for c in base_name if c.isalnum() or c == '_')
+        base_name = protocol.title.lower().replace(" ", "_").replace("-", "_")
+        base_name = "".join(c for c in base_name if c.isalnum() or c == "_")
         # Add timestamp to avoid conflicts
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         base_name = f"{base_name}_{timestamp}"
@@ -45,7 +44,7 @@ def save_protocol_files(
     markdown_gen = MarkdownGenerator()
     markdown_content = markdown_gen.generate_protocol_markdown(protocol)
     markdown_path = output_path / f"{base_name}.md"
-    with open(markdown_path, 'w', encoding='utf-8') as f:
+    with open(markdown_path, "w", encoding="utf-8") as f:
         f.write(markdown_content)
     saved_files.append(str(markdown_path))
 
@@ -53,7 +52,7 @@ def save_protocol_files(
     json_gen = JSONGenerator()
     json_content = json_gen.generate_protocol_json(protocol)
     json_path = output_path / f"{base_name}.json"
-    with open(json_path, 'w', encoding='utf-8') as f:
+    with open(json_path, "w", encoding="utf-8") as f:
         f.write(json_content)
     saved_files.append(str(json_path))
 
@@ -79,9 +78,10 @@ def load_protocol_from_file(file_path: str) -> Protocol:
     # If just a name is provided, look in the protocols directory
     if not path.exists():
         from config.settings import PROTOCOLS_DIR
+
         protocols_dir = Path(PROTOCOLS_DIR)
         # Try different extensions
-        for ext in ['.json', '.md']:
+        for ext in [".json", ".md"]:
             candidate = protocols_dir / f"{file_path}{ext}"
             if candidate.exists():
                 path = candidate
@@ -91,7 +91,7 @@ def load_protocol_from_file(file_path: str) -> Protocol:
         raise FileNotFoundError(f"Protocol file not found: {file_path}")
 
     # Load JSON file
-    with open(path, 'r', encoding='utf-8') as f:
+    with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     # Convert back to Protocol object
@@ -117,17 +117,19 @@ def list_protocol_files(directory: str) -> List[Dict[str, Any]]:
     # Find all JSON files (assuming they contain protocol data)
     for json_file in protocols_dir.glob("*.json"):
         try:
-            with open(json_file, 'r', encoding='utf-8') as f:
+            with open(json_file, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             # Extract basic info
             protocol_info = {
-                'filename': json_file.name,
-                'title': data.get('title', 'Unknown'),
-                'created_at': datetime.fromisoformat(data.get('created_at', datetime.now().isoformat())),
-                'version': data.get('version', '1.0'),
-                'steps_count': len(data.get('steps', [])),
-                'file_path': str(json_file)
+                "filename": json_file.name,
+                "title": data.get("title", "Unknown"),
+                "created_at": datetime.fromisoformat(
+                    data.get("created_at", datetime.now().isoformat())
+                ),
+                "version": data.get("version", "1.0"),
+                "steps_count": len(data.get("steps", [])),
+                "file_path": str(json_file),
             }
             protocols.append(protocol_info)
 
@@ -136,7 +138,7 @@ def list_protocol_files(directory: str) -> List[Dict[str, Any]]:
             continue
 
     # Sort by creation date (newest first)
-    protocols.sort(key=lambda x: x['created_at'], reverse=True)
+    protocols.sort(key=lambda x: x["created_at"], reverse=True)
 
     return protocols
 

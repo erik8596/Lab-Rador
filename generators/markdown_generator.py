@@ -1,7 +1,8 @@
 """Human-readable Markdown generator."""
 
 from typing import List
-from core.models import Protocol, Equipment, Material, SafetyNote, Step, SafetyLevel
+
+from core.models import Equipment, Material, Protocol, SafetyLevel, SafetyNote, Step
 
 
 class MarkdownGenerator:
@@ -62,9 +63,13 @@ class MarkdownGenerator:
             lines.append("## Safety Considerations")
             for note in protocol.safety_notes:
                 level_icon = MarkdownGenerator._get_safety_icon(note.level)
-                lines.append(f"- {level_icon} **{note.level.value.upper()}**: {note.description}")
+                lines.append(
+                    f"- {level_icon} **{note.level.value.upper()}**: {note.description}"
+                )
                 if note.ppe_required:
-                    lines.append(f"  - **PPE Required:** {', '.join(note.ppe_required)}")
+                    lines.append(
+                        f"  - **PPE Required:** {', '.join(note.ppe_required)}"
+                    )
                 if note.hazards:
                     lines.append(f"  - **Hazards:** {', '.join(note.hazards)}")
             lines.append("")
@@ -126,7 +131,7 @@ class MarkdownGenerator:
             SafetyLevel.LOW: "ℹ️",
             SafetyLevel.MEDIUM: "⚠️",
             SafetyLevel.HIGH: "🚨",
-            SafetyLevel.CRITICAL: "☠️"
+            SafetyLevel.CRITICAL: "☠️",
         }
         return icons.get(level, "⚠️")
 
@@ -151,8 +156,11 @@ class MarkdownGenerator:
         lines.append(f"**Difficulty:** {protocol.difficulty_level.value.title()}")
 
         if protocol.safety_notes:
-            high_risk = [note for note in protocol.safety_notes
-                        if note.level in [SafetyLevel.HIGH, SafetyLevel.CRITICAL]]
+            high_risk = [
+                note
+                for note in protocol.safety_notes
+                if note.level in [SafetyLevel.HIGH, SafetyLevel.CRITICAL]
+            ]
             if high_risk:
                 lines.append(f"**⚠️ High Risk Notes:** {len(high_risk)}")
 
