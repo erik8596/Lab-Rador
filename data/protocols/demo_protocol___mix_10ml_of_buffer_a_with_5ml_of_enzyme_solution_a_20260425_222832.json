@@ -1,0 +1,64 @@
+{
+  "title": "Demo Protocol - Mix 10ml of buffer A with 5ml of enzyme solution a...",
+  "objective": "Demo implementation of: Mix 10ml of buffer A with 5ml of enzyme solution and incubate at 37°C for 30 minutes",
+  "duration_minutes": 60.0,
+  "difficulty_level": "beginner",
+  "equipment_required": [
+    {
+      "name": "Basic lab equipment",
+      "type": "other",
+      "quantity": 1,
+      "notes": null
+    }
+  ],
+  "materials_required": [
+    {
+      "name": "Reaction Buffer",
+      "type": "buffer",
+      "amount": "1x",
+      "concentration": null,
+      "storage_conditions": null,
+      "notes": null
+    },
+    {
+      "name": "DNA Polymerase",
+      "type": "enzyme",
+      "amount": "1 unit",
+      "concentration": null,
+      "storage_conditions": null,
+      "notes": null
+    }
+  ],
+  "safety_notes": [
+    {
+      "level": "medium",
+      "description": "Follow standard laboratory safety practices",
+      "ppe_required": [
+        "Lab coat",
+        "Gloves",
+        "Safety goggles"
+      ],
+      "hazards": null
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "description": "Mix 10ml of buffer A with 5ml of enzyme solution and incubate at 37°C for 30 minutes",
+      "duration_minutes": 60.0,
+      "notes": "Follow standard laboratory safety practices",
+      "equipment": [
+        "Basic lab equipment"
+      ],
+      "materials": [
+        "Reaction Buffer",
+        "DNA Polymerase"
+      ],
+      "critical_parameters": null
+    }
+  ],
+  "created_at": "2026-04-25T22:28:32.614533",
+  "version": "1.0",
+  "author": "Lab-Rador Demo Mode",
+  "references": null
+}

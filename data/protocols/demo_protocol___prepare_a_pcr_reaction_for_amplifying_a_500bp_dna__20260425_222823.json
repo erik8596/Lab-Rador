@@ -1,0 +1,55 @@
+{
+  "title": "Demo Protocol - Prepare a PCR reaction for amplifying a 500bp DNA ...",
+  "objective": "Demo implementation of: Prepare a PCR reaction for amplifying a 500bp DNA fragment",
+  "duration_minutes": 120.0,
+  "difficulty_level": "intermediate",
+  "equipment_required": [
+    {
+      "name": "Thermal Cycler",
+      "type": "thermocycler",
+      "quantity": 1,
+      "notes": null
+    }
+  ],
+  "materials_required": [
+    {
+      "name": "DNA Template",
+      "type": "other",
+      "amount": "10-100 ng",
+      "concentration": null,
+      "storage_conditions": null,
+      "notes": null
+    }
+  ],
+  "safety_notes": [
+    {
+      "level": "medium",
+      "description": "Follow standard laboratory safety practices",
+      "ppe_required": [
+        "Lab coat",
+        "Gloves",
+        "Safety goggles"
+      ],
+      "hazards": null
+    }
+  ],
+  "steps": [
+    {
+      "step_number": 1,
+      "description": "Prepare a PCR reaction for amplifying a 500bp DNA fragment",
+      "duration_minutes": 120.0,
+      "notes": "Follow standard laboratory safety practices",
+      "equipment": [
+        "Thermal Cycler"
+      ],
+      "materials": [
+        "DNA Template"
+      ],
+      "critical_parameters": null
+    }
+  ],
+  "created_at": "2026-04-25T22:28:23.606543",
+  "version": "1.0",
+  "author": "Lab-Rador Demo Mode",
+  "references": null
+}

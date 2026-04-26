@@ -56,45 +56,112 @@ class ProtocolGenerator:
             return protocol
 
         except Exception as e:
+            # Check if it's a quota exceeded error and fall back to demo mode
+            error_str = str(e).lower()
+            if "quota" in error_str or "resource_exhausted" in error_str or "429" in error_str:
+                print("API quota exceeded, falling back to demo mode...")
+                return self._generate_demo_protocol(description)
             raise ProtocolGenerationError(f"Failed to generate protocol: {e}")
 
     def _generate_demo_protocol(self, description: str) -> Protocol:
         """Generate a demo protocol without requiring API access."""
-        # This is a simplified demo - in real implementation we'd have more sophisticated logic
         from core.models import Protocol, Step, Equipment, Material, SafetyNote
         from core.models import SafetyLevel, EquipmentType, MaterialType, DifficultyLevel
         from datetime import datetime
+        import re
 
-        # Simple demo protocol
-        steps = [
-            Step(
+        # Try to intelligently parse the description for better demo protocols
+        description_lower = description.lower()
+
+        # Extract potential equipment and materials from description
+        equipment_list = []
+        materials_list = []
+        safety_notes = []
+
+        # Common lab equipment patterns
+        if any(word in description_lower for word in ['pipette', 'pipet', 'transfer']):
+            equipment_list.append(Equipment(name="Pipette", type=EquipmentType.LIQUID_HANDLING, quantity=1))
+        if any(word in description_lower for word in ['centrifuge', 'spin']):
+            equipment_list.append(Equipment(name="Centrifuge", type=EquipmentType.CENTRIFUGE, quantity=1))
+        if any(word in description_lower for word in ['incubator', 'heat', 'temperature']):
+            equipment_list.append(Equipment(name="Incubator", type=EquipmentType.INCUBATOR, quantity=1))
+        if any(word in description_lower for word in ['pcr', 'thermal cycler']):
+            equipment_list.append(Equipment(name="Thermal Cycler", type=EquipmentType.THERMOCYCLER, quantity=1))
+        if any(word in description_lower for word in ['microscope', 'view', 'observe']):
+            equipment_list.append(Equipment(name="Microscope", type=EquipmentType.MICROSCOPE, quantity=1))
+
+        # Common materials patterns
+        if any(word in description_lower for word in ['dna', 'rna', 'template']):
+            materials_list.append(Material(name="DNA Template", type=MaterialType.OTHER, amount="10-100 ng"))
+        if any(word in description_lower for word in ['primer', 'forward', 'reverse']):
+            materials_list.append(Material(name="PCR Primers", type=MaterialType.OTHER, amount="0.5 μM each"))
+        if any(word in description_lower for word in ['buffer', 'solution']):
+            materials_list.append(Material(name="Reaction Buffer", type=MaterialType.BUFFER, amount="1x"))
+        if any(word in description_lower for word in ['enzyme', 'polymerase', 'taq']):
+            materials_list.append(Material(name="DNA Polymerase", type=MaterialType.ENZYME, amount="1 unit"))
+
+        # Default equipment if none detected
+        if not equipment_list:
+            equipment_list.append(Equipment(name="Basic lab equipment", type=EquipmentType.OTHER, quantity=1))
+
+        # Default materials if none detected
+        if not materials_list:
+            materials_list.append(Material(name="Required reagents", type=MaterialType.OTHER, amount="as needed"))
+
+        # Basic safety note
+        safety_notes.append(SafetyNote(
+            level=SafetyLevel.MEDIUM,
+            description="Follow standard laboratory safety practices",
+            ppe_required=["Lab coat", "Gloves", "Safety goggles"]
+        ))
+
+        # Estimate duration based on complexity
+        duration = 15.0  # base duration
+        if 'pcr' in description_lower:
+            duration = 120.0  # PCR typically takes longer
+        elif any(word in description_lower for word in ['culture', 'incubate']):
+            duration = 60.0
+
+        # Determine difficulty
+        difficulty = DifficultyLevel.BEGINNER
+        if len(description.split()) > 20 or any(word in description_lower for word in ['pcr', 'sequencing', 'culture']):
+            difficulty = DifficultyLevel.INTERMEDIATE
+
+        # Create steps - break down the description into logical steps
+        steps = []
+        sentences = [s.strip() for s in description.split('.') if s.strip()]
+
+        for i, sentence in enumerate(sentences, 1):
+            step_duration = duration / len(sentences) if sentences else duration
+
+            steps.append(Step(
+                step_number=i,
+                description=sentence,
+                duration_minutes=round(step_duration, 1),
+                equipment=[eq.name for eq in equipment_list],
+                materials=[mat.name for mat in materials_list],
+                notes="Follow standard laboratory safety practices"
+            ))
+
+        # If no sentences found, create a single step
+        if not steps:
+            steps = [Step(
                 step_number=1,
                 description=f"Perform the described procedure: {description}",
-                duration_minutes=15.0,
-                equipment=["Basic lab equipment"],
-                materials=["Required materials"],
+                duration_minutes=duration,
+                equipment=[eq.name for eq in equipment_list],
+                materials=[mat.name for mat in materials_list],
                 notes="Follow standard laboratory safety practices"
-            )
-        ]
+            )]
 
         return Protocol(
-            title="Demo Protocol",
+            title=f"Demo Protocol - {description[:50]}{'...' if len(description) > 50 else ''}",
             objective=f"Demo implementation of: {description}",
-            duration_minutes=15.0,
-            difficulty_level=DifficultyLevel.BEGINNER,
-            equipment_required=[
-                Equipment(name="Basic lab equipment", type=EquipmentType.OTHER, quantity=1)
-            ],
-            materials_required=[
-                Material(name="Required materials", type=MaterialType.OTHER, amount="as needed")
-            ],
-            safety_notes=[
-                SafetyNote(
-                    level=SafetyLevel.MEDIUM,
-                    description="Follow standard laboratory safety practices",
-                    ppe_required=["Lab coat", "Gloves", "Safety goggles"]
-                )
-            ],
+            duration_minutes=duration,
+            difficulty_level=difficulty,
+            equipment_required=equipment_list,
+            materials_required=materials_list,
+            safety_notes=safety_notes,
             steps=steps,
             version="1.0",
             author="Lab-Rador Demo Mode"
