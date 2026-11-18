@@ -1,225 +1,150 @@
-# Lab-Rador: AI-Powered Protocol Automator
+# Lab-Rador
 
-**SCSP Hackathon 2026 — Autonomous Laboratories Track**
+**AI-assisted laboratory protocol generation | SCSP Hackathon 2026 — Autonomous Laboratories Track**
 
-## Status: Working with FREE AI (Quota Limited)
+Lab-Rador is a Python command-line prototype that converts a natural-language description of a laboratory procedure into a structured protocol. It uses an AI provider to draft protocol data, validates the resulting structure with Pydantic, and saves readable Markdown and machine-readable JSON files.
 
-Lab-Rador is a complete autonomous laboratory protocol automation system that uses FREE Google Gemini AI to transform natural language descriptions into structured, executable lab protocols.
-
-Current Status: API integration working, but free tier quota may be exceeded. Use demo mode as fallback.
-
-## Quick Start
-
-### 1. Get FREE Gemini API Key
-1. Visit: https://makersuite.google.com/app/apikey
-2. Sign in with Google account
-3. Create API key and copy it
-
-### 2. Configure Environment
-```bash
-# Edit .env file
-GEMINI_API_KEY=your_api_key_here
-```
-
-### 3. Generate Your First Protocol
-```bash
-python main.py generate "Prepare a PCR reaction for amplifying a 500bp DNA fragment"
-```
-
-### API Quota Note
-- Free Tier: 60 requests/minute, 1000/day
-- System automatically falls back to demo mode if quota is exceeded
-- No manual configuration needed
-
-### 4. View Generated Protocols
-```bash
-python main.py list-protocols
-```
+The project explores how language models, typed data models, and modular software components can work together in a scientific workflow. **It is a hackathon prototype, not a validated laboratory automation or safety system.**
 
 ## Features
 
-### Implemented
-- FREE AI Integration: Google Gemini API (60 requests/min, 1000/day)
-- Multi-format Output: Markdown documentation + JSON data
-- Rich CLI: Progress bars, tables, colored output
-- Protocol Models: Pydantic-based data validation
-- File Management: Automatic saving and listing
-- Smart Fallback: Automatic demo mode when API quota exceeded
+- **Natural-language input:** Describe a procedure through a command-line interface built with Typer and Rich.
+- **AI integration:** Generate structured responses using Google Gemini or Anthropic Claude, depending on the configured API key.
+- **Typed protocol models:** Represent steps, materials, equipment, estimated duration, and safety notes with Pydantic models.
+- **Two output formats:** Save generated protocols as Markdown and JSON files.
+- **Saved protocol listing:** Display previously generated protocols from a local directory.
+- **Demo fallback:** Generate a simplified example protocol when the selected AI provider returns an error. Demo output is illustrative, not scientifically verified.
+- **Automated tests:** Includes tests for protocol models and CLI help commands.
 
-### Architecture
-- Agent-based Design: ProtocolGenerator with AI analysis
-- Modular Generators: Separate Markdown/JSON output
-- Type Safety: Full Pydantic validation
-- Error Handling: Comprehensive exception hierarchy
-- Configuration: Environment-based settings
+## Tech Stack
 
-## Core Components
+Python 3.12+ · Pydantic · Typer · Rich · Google Gemini API · Anthropic API · python-dotenv · pytest
 
-### Core Models (core/models.py)
-- Protocol — Complete lab procedure with metadata
-- Step — Individual protocol steps with timing
-- Equipment — Lab equipment with types and quantities
-- Material — Reagents with amounts and safety info
-- SafetyNote — PPE requirements and warnings
+## Getting Started
 
-### AI Agents (agents/)
-- ProtocolGenerator — Converts natural language to structured protocols
-- Automatic fallback: Gemini (FREE) → Claude (paid) → Demo mode
+### 1. Clone the repository
 
-### Generators (generators/)
-- MarkdownGenerator — Human-readable protocol documentation
-- JSONGenerator — Structured data export/import
-
-### CLI Interface (cli/)
-- generate — Create protocols from descriptions
-- list-protocols — View saved protocols
-- export — Export in different formats
-
-## Technical Stack
-
-- Python 3.12+ with type hints
-- Pydantic 2.x — Data validation and serialization
-- Google Gemini API — FREE AI for protocol generation
-- Typer — Modern CLI framework
-- Rich — Beautiful terminal output
-- Pathlib — Modern file system operations
-
-## Project Structure
-
-```
-Lab-Rador/
-├── main.py              # CLI entry point
-├── cli/main_cli.py      # Command definitions
-├── agents/
-│   └── protocol_generator.py
-├── api/
-│   └── gemini_client.py # FREE Gemini API client
-├── core/
-│   ├── models.py        # Pydantic models
-│   └── exceptions.py    # Error handling
-├── generators/
-│   ├── markdown_generator.py
-│   └── json_generator.py
-├── config/
-│   └── settings.py      # Configuration
-├── utils/
-│   └── file_io.py       # File operations
-├── data/protocols/      # Generated protocols
-├── requirements.txt     # Dependencies
-└── .env                 # API keys (not in git)
-```
-
-## 🎮 Usage Examples
-
-### Generate Protocol
 ```bash
-python main.py generate "Extract DNA from blood samples using phenol-chloroform method"
+git clone https://github.com/erik8596/Lab-Rador.git
+cd Lab-Rador
 ```
 
-### List Protocols
+### 2. Create a virtual environment
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+```
+
+On Windows, activate it with `.venv\Scripts\activate` instead.
+
+### 3. Install dependencies
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install "google-genai>=0.8.0"
+```
+
+**Repository note:** The current `requirements.txt` omits `google-genai`, which `api/gemini_client.py` imports. The additional installation command is needed until the dependency list is corrected.
+
+### 4. Configure an API key
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and add **at least one** of the following settings:
+
+```dotenv
+GEMINI_API_KEY=your_gemini_api_key_here
+# Or:
+# ANTHROPIC_API_KEY=your_anthropic_api_key_here
+```
+
+The current configuration requires an API key to start, even though protocol generation can fall back to demo output after an API error. When both keys are configured, the generator selects Gemini. Never commit your `.env` file or real API keys.
+
+### 5. Generate a sample protocol
+
+```bash
+python main.py generate "Mix 10 mL of water with 5 mL of blue dye."
+```
+
+Generated `.md` and `.json` files are saved in `data/protocols/` by default.
+
+### 6. List generated protocols
+
 ```bash
 python main.py list-protocols
 ```
 
-### Export Protocol
-```bash
-python main.py export "protocol_name" --format markdown
-```
-
-## 🔒 Security & Safety
-
-- **Input Validation**: All protocols validated against schemas
-- **Safety Checks**: Automatic PPE and hazard identification
-- **Error Handling**: Graceful failure with helpful messages
-- **API Security**: Keys stored in environment variables
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch
-3. Add tests for new functionality
-4. Ensure all tests pass
-5. Submit pull request
-
-## 📄 License
-
-MIT License - Free for academic and research use.
-
-## Acknowledgments
-
-- SCSP Hackathon organizers
-- Google for providing FREE Gemini API
-- Open source community for amazing Python libraries
-   - `anthropic_client.py` — Wrapper for Claude API
-   - `protocols_io_client.py` — Integration with protocols.io
-   - `base_client.py` — Common HTTP utilities
-
-### 5. **CLI Module** (`cli/`)
-   - `main_cli.py` — CLI entry point
-   - `commands/` — Individual commands (generate, refine, analyze, export, list)
-
-### 6. **Utils Module** (`utils/`)
-   - `logger.py` — Structured logging
-   - `validators.py` — Data validation
-   - `formatters.py` — Output formatting
-   - `file_io.py` — File operations
-
-## Next Steps
-
-1. Implement Core Models — Define data structures
-2. Build API Clients — Anthropic integration
-3. Create Agents — Protocol generation logic
-4. Add Generators — Output format support
-5. Build CLI — User interface
-6. Tests & Docs — Full coverage
-
-## Dependencies
-
-- anthropic — Claude AI API
-- typer — CLI framework
-- pydantic — Data validation
-- requests — HTTP client
-- rich — Beautiful terminal output
-- python-dotenv — Environment variables
-
-## Development
+To view all CLI commands and options:
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up environment
-cp .env.example .env
-# Add ANTHROPIC_API_KEY
-
-# Run tests
-make test
-
-# Format code
-make format
-
-# Run dev server
-make dev
+python main.py --help
 ```
 
-## 📝 Documentation
+## How It Works
 
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) — System design
-- [API_REFERENCE.md](docs/API_REFERENCE.md) — API documentation
-- [PROTOCOL_SCHEMA.md](docs/PROTOCOL_SCHEMA.md) — Protocol format
-- [DEVELOPMENT.md](docs/DEVELOPMENT.md) — Developer guide
-- [INSTALL.md](INSTALL.md) — Installation instructions
+1. The **CLI** accepts a plain-language description.
+2. `ProtocolGenerator` selects a configured AI client and requests structured JSON.
+3. The returned data is parsed into a **Pydantic `Protocol` model**, which checks the data's structure and types.
+4. The **Markdown and JSON generators** format the protocol.
+5. File utilities save the outputs locally for inspection.
 
-## 🏆 Hackathon Goal
+Pydantic validation checks schema conformity; it does **not** establish that scientific instructions are accurate, safe, or complete.
 
-Build a complete autonomous agent system that:
-- Takes natural language lab procedure descriptions
-- Generates structured, validated protocols
-- Outputs executable automation scripts (Opentrons)
-- Supports iterative refinement with AI feedback
-- Validates safety and equipment compatibility
+## Project Structure
 
----
+```text
+Lab-Rador/
+├── agents/                # Protocol-generation orchestration and demo fallback
+├── api/                   # Gemini and Anthropic clients
+├── cli/                   # Typer command-line interface
+├── config/                # Environment settings
+├── core/                  # Pydantic models and exceptions
+├── generators/            # Markdown and JSON output
+├── utils/                 # Protocol file handling
+├── data/protocols/        # Sample and generated protocol files
+├── tests/                 # Model and CLI tests
+├── main.py                # Application entry point
+├── requirements.txt       # Dependency list
+└── .env.example           # Environment configuration template
+```
 
-**Project Template Created:** April 2026  
-**Status:** Ready for implementation
+## Example Outputs
+
+The repository includes sample generated files you can inspect without running an API request:
+
+- [Example Markdown protocol](data/protocols/demo_protocol___test_protocol_generation_20260426_003523.md)
+- [Example JSON protocol](data/protocols/demo_protocol___test_protocol_generation_20260426_003523.json)
+
+## Testing
+
+The repository contains `pytest` tests for the data models and CLI commands. After installing dependencies and configuring an API key, run:
+
+```bash
+python -m pytest
+```
+
+The project configuration currently specifies an 80% coverage threshold. Test passing status and coverage have **not been independently verified** for this README update.
+
+## Current Limitations and Planned Work
+
+- **Not implemented:** Opentrons script generation and protocols.io integration are placeholders in the current source tree.
+- **Not implemented:** Physical laboratory equipment control and end-to-end scientific validation.
+- **API fallback behavior:** The app selects one provider at startup; it does not automatically switch from Gemini to Claude after a request fails. The implemented error fallback generates a simplified demo protocol.
+- **Setup:** `requirements.txt` needs the `google-genai` dependency, and `.env.example` should include a `GEMINI_API_KEY` entry.
+- **Export command:** An `export` CLI command exists, but the file-loading utility contains duplicate function definitions. Verify and fix exporting before relying on it.
+- **Model and quota settings:** Available provider models, prices, and rate limits may change. Confirm current settings with the provider before use.
+
+## Safety and Intended Use
+
+Lab-Rador is an experimental software project. AI-generated and demo protocols may be incomplete, incorrect, or unsafe. Do not use generated instructions to conduct laboratory procedures, operate equipment, or make safety decisions without review and approval by qualified laboratory personnel. Included safety-note fields are not a substitute for formal risk assessment.
+
+## Project Context
+
+Developed for the **SCSP Hackathon 2026, Autonomous Laboratories Track**. The project demonstrates modular Python architecture, API integration, structured data validation, automated tests, and command-line development.
+
+## License
+
+The repository's `LICENSE` file is currently a placeholder. A license has not yet been specified in the uploaded version.
