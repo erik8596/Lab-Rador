@@ -42,10 +42,9 @@ On Windows, activate it with `.venv\Scripts\activate` instead.
 
 ```bash
 python -m pip install -r requirements.txt
-python -m pip install "google-genai>=0.8.0"
 ```
 
-**Repository note:** The current `requirements.txt` omits `google-genai`, which `api/gemini_client.py` imports. The additional installation command is needed until the dependency list is corrected.
+**Dependency note:** This project pins `google-genai==0.8.0` to remain compatible with its existing `pydantic==2.6.4` requirement. Upgrading the Google SDK may require updating Pydantic and checking for API changes.
 
 ### 4. Configure an API key
 
@@ -133,7 +132,7 @@ The project configuration currently specifies an 80% coverage threshold. Test pa
 - **Not implemented:** Opentrons script generation and protocols.io integration are placeholders in the current source tree.
 - **Not implemented:** Physical laboratory equipment control and end-to-end scientific validation.
 - **API fallback behavior:** The app selects one provider at startup; it does not automatically switch from Gemini to Claude after a request fails. The implemented error fallback generates a simplified demo protocol.
-- **Setup:** `requirements.txt` needs the `google-genai` dependency, and `.env.example` should include a `GEMINI_API_KEY` entry.
+- **Dependency upgrades:** The Google Gen AI SDK is pinned to an older compatible version. Updating it and the Pydantic dependency together may require code or model-configuration changes.
 - **Export command:** An `export` CLI command exists, but the file-loading utility contains duplicate function definitions. Verify and fix exporting before relying on it.
 - **Model and quota settings:** Available provider models, prices, and rate limits may change. Confirm current settings with the provider before use.
 
