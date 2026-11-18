@@ -1,5 +1,6 @@
 annotated-doc==0.0.4
 anthropic==0.39.0
+google-genai==0.8.0
 click==8.3.3
 joblib==1.5.3
 markdown-it-py==4.0.0
